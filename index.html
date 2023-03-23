@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Is it Worker?</title>
+  <style>body{font-family:sans-serif;text-align:center;}h1{font-size:1.2rem;}p{max-width:380px;margin:8px auto;}#result{font-weight:bold;}</style>
+  <script type="module">
+    const test = location.search.slice(1).trim();
+    if (test.length) {
+      const worker = new Worker('./worker.js');
+      worker.addEventListener('message', ({data}) => {
+        result.textContent = data === 'undefined' ?
+          `Nope, no ${test} in Workers.` :
+          `Yep, ${test} type is: ${data}.`;
+      });
+      worker.postMessage(test);
+    }
+    else
+      result.textContent = 'Nothing to test.';
+  </script>
+</head>
+<body>
+  <h1>Is it Worker?</h1>
+  <p>
+    This page allows anyone to test global references and classes available in a <em>Web Worker</em>.
+  </p>
+  <p>
+    Simply use, as example, <code>?TextEncoder</code> as search parameter, and see the <em>yep</em>/<em>nope</em> related result.
+  </p>
+  <p id="result"></p>
+</body>
+</html>
